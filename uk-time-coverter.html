@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sri Lanka - UK Time Converter</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #5EE7DF, #B490CA);
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            width: 360px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 30px;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        .time-display {
+            font-size: 16px;
+            margin-bottom: 25px;
+            font-weight: bold;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        input[type="datetime-local"] {
+            padding: 12px;
+            width: 100%;
+            border: none;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            background: rgba(255, 255, 255, 0.8);
+            font-size: 16px;
+            color: #333;
+        }
+
+        button {
+            background-color: #ff7676;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 16px;
+            color: white;
+            cursor: pointer;
+            width: 100%;
+            margin: 10px 0;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #ff4444;
+        }
+
+        p {
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+        .result {
+            font-size: 20px;
+            font-weight: bold;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .button-group button {
+            width: 48%;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Sri Lanka - UK Time Converter</h1>
+
+        <div class="time-display">
+            <p id="currentSLTime">Sri Lanka Time: --:--</p>
+            <p id="currentUKTime">UK Time: --:--</p>
+        </div>
+
+        <label for="slTime">Enter Sri Lanka Time</label>
+        <input type="datetime-local" id="slTime">
+
+        <label for="ukTime">Enter UK Time</label>
+        <input type="datetime-local" id="ukTime">
+
+        <div class="button-group">
+            <button onclick="convertToUK()">Convert SL to UK</button>
+            <button onclick="convertToSL()">Convert UK to SL</button>
+        </div>
+
+        <p id="result" class="result"></p>
+    </div>
+
+    <script>
+        function updateCurrentTimes() {
+            const nowSL = new Date();
+            const nowUK = new Date(nowSL.getTime() - (5.5 * 60 * 60 * 1000)); // UK time is 5.5 hours behind Sri Lanka
+
+            document.getElementById("currentSLTime").innerHTML = `Sri Lanka Time: ${formatTime(nowSL)}`;
+            document.getElementById("currentUKTime").innerHTML = `UK Time: ${formatTime(nowUK)}`;
+        }
+
+        function convertToUK() {
+            let slTimeInput = document.getElementById("slTime").value;
+            if (slTimeInput) {
+                let slTime = new Date(slTimeInput);
+                let ukTime = new Date(slTime.getTime() - (5.5 * 60 * 60 * 1000)); // Convert to UK time (GMT)
+                document.getElementById("result").innerHTML = `UK Time: ${formatTime(ukTime)}`;
+            } else {
+                alert("Please enter a valid Sri Lanka time.");
+            }
+        }
+
+        function convertToSL() {
+            let ukTimeInput = document.getElementById("ukTime").value;
+            if (ukTimeInput) {
+                let ukTime = new Date(ukTimeInput);
+                let slTime = new Date(ukTime.getTime() + (5.5 * 60 * 60 * 1000)); // Convert to SL time
+                document.getElementById("result").innerHTML = `Sri Lanka Time: ${formatTime(slTime)}`;
+            } else {
+                alert("Please enter a valid UK time.");
+            }
+        }
+
+        function formatTime(date) {
+            let hours = date.getHours();
+            let minutes = date.getMinutes();
+            let ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12; // the hour '0' should be '12'
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            let strTime = hours + ':' + minutes + ' ' + ampm;
+            return date.toLocaleDateString() + ' ' + strTime;
+        }
+
+        // Update current time every second
+        setInterval(updateCurrentTimes, 1000);
+    </script>
+
+</body>
+</html>
